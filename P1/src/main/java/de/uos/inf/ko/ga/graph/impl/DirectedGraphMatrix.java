@@ -1,5 +1,6 @@
 package de.uos.inf.ko.ga.graph.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uos.inf.ko.ga.graph.Graph;
@@ -10,87 +11,122 @@ import de.uos.inf.ko.ga.graph.Graph;
  */
 public class DirectedGraphMatrix implements Graph {
 
+	List<List<Double>> adjacencyMatrix;
+
+	public DirectedGraphMatrix() {
+	    this.adjacencyMatrix = new ArrayList<>();
+    }
+
 	@Override
 	public void addEdge(int start, int end) {
-		// TODO Auto-generated method stub
-		
+        this.addEdge(start, end, 1.0);
 	}
 
 	@Override
 	public void addEdge(int start, int end, double weight) {
-		// TODO Auto-generated method stub
-		
+        if (start >= 0 && start < this.adjacencyMatrix.size() && end < this.adjacencyMatrix.size()) {
+            this.adjacencyMatrix.get(start).set(end, weight);
+        }
 	}
 
 	@Override
 	public void addVertex() {
-		// TODO Auto-generated method stub
-		
+	    for (List<Double> row : this.adjacencyMatrix) {
+	        row.add(Double.POSITIVE_INFINITY);
+        }
+        ArrayList<Double> newRow = new ArrayList<>();
+	    for (int i = 0; i <= this.adjacencyMatrix.size(); i++) {
+	        newRow.add(Double.POSITIVE_INFINITY);
+        }
+        this.adjacencyMatrix.add(newRow);
 	}
 
 	@Override
 	public void addVertices(int n) {
-		// TODO Auto-generated method stub
-		
+        for (int i = 0; i < n; i++) {
+            this.addVertex();
+        }
 	}
 
 	@Override
 	public List<Integer> getNeighbors(int v) {
-		// TODO Auto-generated method stub
-		return null;
+        List<Integer> neighbors = this.getPredecessors(v);
+        for (int successor : this.getSuccessors(v)) {
+            if (!neighbors.contains(successor)) {
+                neighbors.add(successor);
+            }
+        }
+        return neighbors;
 	}
 
 	@Override
 	public List<Integer> getPredecessors(int v) {
-		// TODO Auto-generated method stub
-		return null;
+	    // col
+        ArrayList<Integer> predecessors = new ArrayList<>();
+        for (int i = 0; i < this.adjacencyMatrix.size(); i++) {
+            if (this.adjacencyMatrix.get(i).get(v) < Double.POSITIVE_INFINITY) {
+                predecessors.add(i);
+            }
+        }
+        return predecessors;
 	}
 
 	@Override
 	public List<Integer> getSuccessors(int v) {
-		// TODO Auto-generated method stub
-		return null;
+	    // row
+        ArrayList<Integer> successors = new ArrayList<>();
+        for (int i = 0; i < this.adjacencyMatrix.size(); i++) {
+		    if (this.adjacencyMatrix.get(v).get(i) < Double.POSITIVE_INFINITY) {
+		        successors.add(i);
+            }
+        }
+        return successors;
 	}
 
 	@Override
 	public int getVertexCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.adjacencyMatrix.size();
 	}
 
 	@Override
 	public double getEdgeWeight(int start, int end) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.adjacencyMatrix.get(start).get(end);
 	}
 
 	@Override
 	public boolean hasEdge(int start, int end) {
-		// TODO Auto-generated method stub
-		return false;
+        if (start < this.adjacencyMatrix.size() && end < this.adjacencyMatrix.size()) {
+            return this.getSuccessors(start).contains(end);
+        }
+        return false;
 	}
 
 	@Override
 	public void removeEdge(int start, int end) {
-		// TODO Auto-generated method stub
-		
+		this.adjacencyMatrix.get(start).set(end, Double.POSITIVE_INFINITY);
 	}
 
 	@Override
 	public void removeVertex() {
-		// TODO Auto-generated method stub
-		
+        if (!this.adjacencyMatrix.isEmpty()) {
+            this.adjacencyMatrix.remove(this.adjacencyMatrix.size() - 1);
+        }
 	}
 
 	@Override
 	public boolean isWeighted() {
-		// TODO Auto-generated method stub
-		return false;
+		for (List<Double> row : this.adjacencyMatrix) {
+		    for (double entry : row) {
+                if (entry != Double.POSITIVE_INFINITY && entry != 1.0) {
+                    return true;
+                }
+            }
+        }
+        return false;
 	}
 
 	@Override
 	public boolean isDirected() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }
