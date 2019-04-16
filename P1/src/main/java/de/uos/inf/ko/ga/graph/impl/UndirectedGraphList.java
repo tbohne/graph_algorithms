@@ -1,6 +1,9 @@
 package de.uos.inf.ko.ga.graph.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.uos.inf.ko.ga.graph.Graph;
 
@@ -10,87 +13,120 @@ import de.uos.inf.ko.ga.graph.Graph;
  */
 public class UndirectedGraphList implements Graph {
 
+	private List<Map<Integer, Double>> adjacencyList;
+
+	public UndirectedGraphList() {
+	    this.adjacencyList = new ArrayList<>();
+    }
+
 	@Override
 	public void addEdge(int start, int end) {
-		// TODO Auto-generated method stub
-		
+        this.addEdge(start, end, 1.0);
 	}
 
 	@Override
 	public void addEdge(int start, int end, double weight) {
-		// TODO Auto-generated method stub
-		
+        if (start >= 0 && start < this.adjacencyList.size() && end < this.adjacencyList.size()) {
+            this.adjacencyList.get(start).put(end, weight);
+            this.adjacencyList.get(end).put(start, weight);
+        }
 	}
 
 	@Override
 	public void addVertex() {
-		// TODO Auto-generated method stub
-		
+        Map<Integer, Double> vertex = new HashMap<>();
+        this.adjacencyList.add(vertex);
 	}
 
 	@Override
 	public void addVertices(int n) {
-		// TODO Auto-generated method stub
-		
+        for (int i = 0; i < n; i++) {
+            Map<Integer, Double> vertex = new HashMap<>();
+            this.adjacencyList.add(vertex);
+        }
 	}
 
 	@Override
 	public List<Integer> getNeighbors(int v) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getPredecessors(v);
 	}
 
 	@Override
 	public List<Integer> getPredecessors(int v) {
-		// TODO Auto-generated method stub
-		return null;
+        ArrayList<Integer> predecessors = new ArrayList<>();
+        for (int i = 0; i < this.adjacencyList.size(); i++) {
+            if (i != v) {
+                if (this.adjacencyList.get(i).keySet().contains(v)) {
+                    predecessors.add(i);
+                }
+            }
+        }
+        return predecessors;
 	}
 
 	@Override
 	public List<Integer> getSuccessors(int v) {
-		// TODO Auto-generated method stub
-		return null;
+        ArrayList<Integer> successors = new ArrayList<>();
+        for (int neighbor : this.adjacencyList.get(v).keySet()) {
+            successors.add(neighbor);
+        }
+        return successors;
 	}
 
 	@Override
 	public int getVertexCount() {
-		// TODO Auto-generated method stub
-		return 0;
+        return this.adjacencyList.size();
 	}
 
 	@Override
 	public double getEdgeWeight(int start, int end) {
-		// TODO Auto-generated method stub
-		return 0;
+        if (hasEdge(start, end)) {
+            return this.adjacencyList.get(start).get(end);
+        }
+        return Double.POSITIVE_INFINITY;
 	}
 
 	@Override
 	public boolean hasEdge(int start, int end) {
-		// TODO Auto-generated method stub
-		return false;
+        if (start < this.adjacencyList.size() && end < this.adjacencyList.size()) {
+            return this.getSuccessors(start).contains(end);
+        }
+        return false;
 	}
 
 	@Override
 	public void removeEdge(int start, int end) {
-		// TODO Auto-generated method stub
-		
+        if (this.hasEdge(start, end)) {
+            this.adjacencyList.get(start).remove(end);
+            this.adjacencyList.get(end).remove(start);
+        }
 	}
 
 	@Override
 	public void removeVertex() {
-		// TODO Auto-generated method stub
-		
+        if (!this.adjacencyList.isEmpty()) {
+            List<Integer> predecessors = this.getPredecessors(this.getVertexCount() - 1);
+            for (int pred : predecessors) {
+                this.removeEdge(pred, this.getVertexCount() - 1);
+            }
+            this.adjacencyList.remove(this.getVertexCount() - 1);
+        }
 	}
 
 	@Override
 	public boolean isWeighted() {
-		// TODO Auto-generated method stub
-		return false;
+        for (Map m : this.adjacencyList) {
+            for (Object o : m.values()) {
+                if ((double)o != 1.0) {
+                    return true;
+                }
+            }
+        }
+        return false;
 	}
 
 	@Override
 	public boolean isDirected() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

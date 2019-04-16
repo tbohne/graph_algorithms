@@ -44,7 +44,6 @@ public class DirectedGraphList implements Graph {
 	@Override
 	public List<Integer> getNeighbors(int v) {
         List<Integer> neighbors = this.getPredecessors(v);
-
         for (int successor : this.getSuccessors(v)) {
             if (!neighbors.contains(successor)) {
                 neighbors.add(successor);
