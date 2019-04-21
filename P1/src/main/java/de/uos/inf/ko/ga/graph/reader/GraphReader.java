@@ -11,17 +11,12 @@ import de.uos.inf.ko.ga.graph.impl.UndirectedGraphMatrix;
 
 public class GraphReader {
 
-	/**
-	 * Reads a directed graph from a file.
-	 * @param f File to be read
-	 * @return Directed graph
-	 */
-	public static Graph readDirectedGraph(File f) {
+    public static int[][] readMatrix(File file) {
 
         int numberOfVertices = 0;
         int[][] adjacencyMatrix = new int[numberOfVertices][numberOfVertices];
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
             reader.readLine();
             numberOfVertices = Integer.parseInt(reader.readLine().split(" ")[1].trim());
@@ -47,11 +42,20 @@ public class GraphReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return adjacencyMatrix;
+    }
 
+	/**
+	 * Reads a directed graph from a file.
+	 * @param f File to be read
+	 * @return Directed graph
+	 */
+	public static Graph readDirectedGraph(File f) {
         DirectedGraphMatrix graph = new DirectedGraphMatrix();
-        graph.addVertices(numberOfVertices);
-        for (int i = 0; i < numberOfVertices; i++) {
-            for (int j = 0; j < numberOfVertices; j++) {
+        int[][] adjacencyMatrix = readMatrix(f);
+        graph.addVertices(adjacencyMatrix.length);
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
                 if (adjacencyMatrix[i][j] != Integer.MIN_VALUE) {
                     graph.addEdge(i, j, adjacencyMatrix[i][j]);
                 }
@@ -66,8 +70,16 @@ public class GraphReader {
 	 * @return Undirected graph
 	 */
 	public static Graph readUndirectedGraph(File f) {
-		/* TODO: implement me! */
-		return new UndirectedGraphMatrix();
+        UndirectedGraphMatrix graph = new UndirectedGraphMatrix();
+        int[][] adjacencyMatrix = readMatrix(f);
+        graph.addVertices(adjacencyMatrix.length);
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
+                if (adjacencyMatrix[i][j] != Integer.MIN_VALUE) {
+                    graph.addEdge(i, j, adjacencyMatrix[i][j]);
+                }
+            }
+        }
+        return graph;
 	}
-
 }
