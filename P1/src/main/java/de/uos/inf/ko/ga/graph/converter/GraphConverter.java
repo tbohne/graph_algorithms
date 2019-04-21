@@ -20,24 +20,28 @@ public class GraphConverter {
 	 */
 	public static Graph toList(Graph graph) {
 		if (graph.isDirected()) {
-
 		    DirectedGraphList adjacencyList = new DirectedGraphList();
 		    adjacencyList.addVertices(graph.getVertexCount());
-
-
-
-			/* TODO: implement me! */
-
-
-
-			return new DirectedGraphList();
-
-
-
+		    for (int vertex = 0; vertex < graph.getVertexCount(); vertex++) {
+		        for (int neighbor : graph.getSuccessors(vertex)) {
+                    adjacencyList.addEdge(vertex, neighbor, graph.getEdgeWeight(vertex, neighbor));
+                }
+            }
+			return adjacencyList;
 
 		} else {
-			/* TODO: implement me! */
-			return new UndirectedGraphList();
+
+		    // TODO: adjust for undirected
+
+            UndirectedGraphList adjacencyList = new UndirectedGraphList();
+            adjacencyList.addVertices(graph.getVertexCount());
+
+            for (int vertex = 0; vertex < graph.getVertexCount(); vertex++) {
+                for (int neighbor : graph.getNeighbors(vertex)) {
+                    adjacencyList.addEdge(vertex, neighbor, graph.getEdgeWeight(vertex, neighbor));
+                }
+            }
+            return adjacencyList;
 		}
 	}
 
@@ -50,11 +54,23 @@ public class GraphConverter {
 	 */
 	public static Graph toMatrix(Graph graph) {
 		if (graph.isDirected()) {
-			/* TODO: implement me! */
-			return new DirectedGraphMatrix();
+		    DirectedGraphMatrix adjacencyMatrix = new DirectedGraphMatrix();
+		    adjacencyMatrix.addVertices(graph.getVertexCount());
+            for (int vertex = 0; vertex < graph.getVertexCount(); vertex++) {
+                for (int neighbor : graph.getSuccessors(vertex)) {
+                    adjacencyMatrix.addEdge(vertex, neighbor, graph.getEdgeWeight(vertex, neighbor));
+                }
+            }
+			return adjacencyMatrix;
 		} else {
-			/* TODO: implement me! */
-			return new UndirectedGraphMatrix();
+            UndirectedGraphMatrix adjacencyMatrix = new UndirectedGraphMatrix();
+            adjacencyMatrix.addVertices(graph.getVertexCount());
+            for (int vertex = 0; vertex < graph.getVertexCount(); vertex++) {
+                for (int neighbor : graph.getNeighbors(vertex)) {
+                    adjacencyMatrix.addEdge(vertex, neighbor, graph.getEdgeWeight(vertex, neighbor));
+                }
+            }
+            return adjacencyMatrix;
 		}
 	}
 
