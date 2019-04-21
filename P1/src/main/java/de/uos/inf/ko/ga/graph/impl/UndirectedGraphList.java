@@ -43,9 +43,8 @@ public class UndirectedGraphList implements Graph {
      */
 	@Override
 	public void addEdge(int start, int end, double weight) {
-        if (start >= 0 && start < this.adjacencyList.size() && end < this.adjacencyList.size()) {
+        if (start >= 0 && start < this.adjacencyList.size() && end >= 0 && end < this.adjacencyList.size()) {
             this.adjacencyList.get(start).put(end, weight);
-            this.adjacencyList.get(end).put(start, weight);
         }
 	}
 
@@ -90,7 +89,7 @@ public class UndirectedGraphList implements Graph {
         ArrayList<Integer> predecessors = new ArrayList<>();
         for (int i = 0; i < this.adjacencyList.size(); i++) {
             if (i != v) {
-                if (this.adjacencyList.get(i).keySet().contains(v)) {
+                if (this.adjacencyList.get(i).keySet().contains(v) || this.adjacencyList.get(v).keySet().contains(i)) {
                     predecessors.add(i);
                 }
             }
@@ -105,11 +104,7 @@ public class UndirectedGraphList implements Graph {
      */
 	@Override
 	public List<Integer> getSuccessors(int v) {
-        ArrayList<Integer> successors = new ArrayList<>();
-        for (int neighbor : this.adjacencyList.get(v).keySet()) {
-            successors.add(neighbor);
-        }
-        return successors;
+        return this.getPredecessors(v);
 	}
 
     /**
@@ -129,8 +124,12 @@ public class UndirectedGraphList implements Graph {
      */
 	@Override
 	public double getEdgeWeight(int start, int end) {
-        if (hasEdge(start, end)) {
-            return this.adjacencyList.get(start).get(end);
+	    if (this.hasEdge(start, end)) {
+	        if (this.adjacencyList.get(start).containsKey(end)) {
+	            return this.adjacencyList.get(start).get(end);
+            } else {
+                return this.adjacencyList.get(end).get(start);
+            }
         }
         return Double.POSITIVE_INFINITY;
 	}
@@ -142,8 +141,8 @@ public class UndirectedGraphList implements Graph {
      */
 	@Override
 	public boolean hasEdge(int start, int end) {
-        if (start < this.adjacencyList.size() && end < this.adjacencyList.size()) {
-            return this.getSuccessors(start).contains(end);
+        if (start >= 0 && start < this.adjacencyList.size() && end >= 0 && end < this.adjacencyList.size()) {
+            return this.getSuccessors(start).contains(end) || this.getSuccessors(end).contains(start);
         }
         return false;
 	}
@@ -155,9 +154,12 @@ public class UndirectedGraphList implements Graph {
      */
 	@Override
 	public void removeEdge(int start, int end) {
-        if (this.hasEdge(start, end)) {
-            this.adjacencyList.get(start).remove(end);
-            this.adjacencyList.get(end).remove(start);
+	    if (this.hasEdge(start, end)) {
+            if (this.adjacencyList.get(start).containsKey(end)) {
+                this.adjacencyList.get(start).remove(end);
+            } else {
+                this.adjacencyList.get(end).remove(start);
+            }
         }
 	}
 

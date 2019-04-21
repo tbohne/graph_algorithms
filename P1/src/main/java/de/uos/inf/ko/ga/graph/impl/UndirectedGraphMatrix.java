@@ -84,7 +84,7 @@ public class UndirectedGraphMatrix implements Graph {
 	}
 
     /**
-     * Returns a list containing all predecessors of v. In an undirected graph all neighbors are returned.
+     * Returns a list containing all predecessors of v.
      * @param v vertex id
      * @return list containing all predecessors of v
      */
@@ -101,7 +101,7 @@ public class UndirectedGraphMatrix implements Graph {
 	}
 
     /**
-     * Returns a list containing all successors v. In an undirected graph all neighbors are returned.
+     * Returns a list containing all successors v.
      * @param v vertex id
      * @return list containing all edges starting in v
      */
