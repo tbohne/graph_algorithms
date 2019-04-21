@@ -8,20 +8,37 @@ import de.uos.inf.ko.ga.graph.Graph;
 /**
  * Implementation of a directed graph with a matrix representation of the edges.
  *
+ * @author Tim Bohne
  */
 public class DirectedGraphMatrix implements Graph {
 
 	List<List<Double>> adjacencyMatrix;
 
+    /**
+     * Constructor
+     */
 	public DirectedGraphMatrix() {
 	    this.adjacencyMatrix = new ArrayList<>();
     }
 
+    /**
+     * Method to add the edge from start to end to the graph.
+     * Adding self-loops is not allowed.
+     * @param start start vertex
+     * @param end   end vertex
+     */
 	@Override
 	public void addEdge(int start, int end) {
         this.addEdge(start, end, 1.0);
 	}
 
+    /**
+     * Method to add the edge with the given weight to the graph from start to end.
+     * Adding self-loops is not allowed.
+     * @param start  number of start vertex
+     * @param end    number of end vertex
+     * @param weight weight of edge
+     */
 	@Override
 	public void addEdge(int start, int end, double weight) {
         if (start >= 0 && start < this.adjacencyMatrix.size() && end < this.adjacencyMatrix.size()) {
@@ -29,6 +46,9 @@ public class DirectedGraphMatrix implements Graph {
         }
 	}
 
+    /**
+     * Method to add a vertex to the graph.
+     */
 	@Override
 	public void addVertex() {
 	    for (List<Double> row : this.adjacencyMatrix) {
@@ -41,6 +61,10 @@ public class DirectedGraphMatrix implements Graph {
         this.adjacencyMatrix.add(newRow);
 	}
 
+    /**
+     * Method to add multiple vertices to the graph.
+     * @param n number of vertices to add
+     */
 	@Override
 	public void addVertices(int n) {
         for (int i = 0; i < n; i++) {
@@ -48,6 +72,11 @@ public class DirectedGraphMatrix implements Graph {
         }
 	}
 
+    /**
+     * Returns all neighbors of the given vertex v (all vertices i with {i,v} in E or (i,v) or (v,i) in E).
+     * @param v vertex whose neighbors shall be returned
+     * @return List of vertices adjacent to v
+     */
 	@Override
 	public List<Integer> getNeighbors(int v) {
         List<Integer> neighbors = this.getPredecessors(v);
@@ -59,6 +88,11 @@ public class DirectedGraphMatrix implements Graph {
         return neighbors;
 	}
 
+    /**
+     * Returns a list containing all predecessors of v.
+     * @param v vertex id
+     * @return list containing all predecessors of v
+     */
 	@Override
 	public List<Integer> getPredecessors(int v) {
 	    // col
@@ -71,6 +105,11 @@ public class DirectedGraphMatrix implements Graph {
         return predecessors;
 	}
 
+    /**
+     * Returns a list containing all successors v.
+     * @param v vertex id
+     * @return list containing all edges starting in v
+     */
 	@Override
 	public List<Integer> getSuccessors(int v) {
 	    // row
@@ -83,16 +122,31 @@ public class DirectedGraphMatrix implements Graph {
         return successors;
 	}
 
+    /**
+     * Method to get the number of vertices.
+     * @return number of vertices
+     */
 	@Override
 	public int getVertexCount() {
 		return this.adjacencyMatrix.size();
 	}
 
+    /**
+     * Method to get the weight of the edge {start, end} / the arc (start, end).
+     * @param start start vertex of edge / arc
+     * @param end   end vertex of edge / arc
+     * @return Double.POSITIVE_INFINITY, if the edge does not exist, c_{start, end} otherwise
+     */
 	@Override
 	public double getEdgeWeight(int start, int end) {
 		return this.adjacencyMatrix.get(start).get(end);
 	}
 
+    /**
+     * Method to test whether the graph contains the edge {start, end} / the arc (start, end).
+     * @param start start vertex of the edge
+     * @param end   end vertex of the edge
+     */
 	@Override
 	public boolean hasEdge(int start, int end) {
         if (start < this.adjacencyMatrix.size() && end < this.adjacencyMatrix.size()) {
@@ -101,11 +155,19 @@ public class DirectedGraphMatrix implements Graph {
         return false;
 	}
 
+    /**
+     * Method to remove an edge from the graph, defined by the vertices start and end.
+     * @param start start vertex of the edge
+     * @param end   end vertex of the edge
+     */
 	@Override
 	public void removeEdge(int start, int end) {
 		this.adjacencyMatrix.get(start).set(end, Double.POSITIVE_INFINITY);
 	}
 
+    /**
+     * Method to remove the last vertex from the graph.
+     */
 	@Override
 	public void removeVertex() {
         if (!this.adjacencyMatrix.isEmpty()) {
@@ -113,6 +175,11 @@ public class DirectedGraphMatrix implements Graph {
         }
 	}
 
+    /**
+     * Returns whether the graph is weighted.
+     * A graph is weighted if an edge with weight different from 1.0 has been added to the graph.
+     * @return true if the graph is weighted
+     */
 	@Override
 	public boolean isWeighted() {
 		for (List<Double> row : this.adjacencyMatrix) {
@@ -125,6 +192,10 @@ public class DirectedGraphMatrix implements Graph {
         return false;
 	}
 
+    /**
+     * Returns whether the graph is directed.
+     * @return true if the graph is directed
+     */
 	@Override
 	public boolean isDirected() {
 		return true;
