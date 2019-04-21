@@ -20,8 +20,21 @@ public class GraphConverter {
 	 */
 	public static Graph toList(Graph graph) {
 		if (graph.isDirected()) {
+
+		    DirectedGraphList adjacencyList = new DirectedGraphList();
+		    adjacencyList.addVertices(graph.getVertexCount());
+
+
+
 			/* TODO: implement me! */
+
+
+
 			return new DirectedGraphList();
+
+
+
+
 		} else {
 			/* TODO: implement me! */
 			return new UndirectedGraphList();
