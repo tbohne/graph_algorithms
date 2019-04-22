@@ -8,8 +8,24 @@ import de.uos.inf.ko.ga.graph.impl.UndirectedGraphMatrix;
 
 /**
  * Methods for converting between list and matrix representations of graphs.
+ *
+ * @author Tim Bohne
  */
 public class GraphConverter {
+
+    /**
+     * Adds the edges that are part of the input graph to the output graph.
+     *
+     * @param inputGraph  - the graph the edges are copied from
+     * @param outputGraph - the graph the edges are copied to
+     */
+    public static void addEdgesFromMatrixToList(Graph inputGraph, Graph outputGraph) {
+        for (int vertex = 0; vertex < inputGraph.getVertexCount(); vertex++) {
+            for (int neighbor : inputGraph.getSuccessors(vertex)) {
+                outputGraph.addEdge(vertex, neighbor, inputGraph.getEdgeWeight(vertex, neighbor));
+            }
+        }
+    }
 
 	/**
 	 * Constructs a graph represented by adjacency lists.
@@ -20,28 +36,15 @@ public class GraphConverter {
 	 */
 	public static Graph toList(Graph graph) {
 		if (graph.isDirected()) {
-		    DirectedGraphList adjacencyList = new DirectedGraphList();
-		    adjacencyList.addVertices(graph.getVertexCount());
-		    for (int vertex = 0; vertex < graph.getVertexCount(); vertex++) {
-		        for (int neighbor : graph.getSuccessors(vertex)) {
-                    adjacencyList.addEdge(vertex, neighbor, graph.getEdgeWeight(vertex, neighbor));
-                }
-            }
-			return adjacencyList;
-
+		    DirectedGraphList dirGraphList = new DirectedGraphList();
+		    dirGraphList.addVertices(graph.getVertexCount());
+		    addEdgesFromMatrixToList(graph, dirGraphList);
+			return dirGraphList;
 		} else {
-
-		    // TODO: adjust for undirected
-
-            UndirectedGraphList adjacencyList = new UndirectedGraphList();
-            adjacencyList.addVertices(graph.getVertexCount());
-
-            for (int vertex = 0; vertex < graph.getVertexCount(); vertex++) {
-                for (int neighbor : graph.getNeighbors(vertex)) {
-                    adjacencyList.addEdge(vertex, neighbor, graph.getEdgeWeight(vertex, neighbor));
-                }
-            }
-            return adjacencyList;
+            UndirectedGraphList undirGraphList = new UndirectedGraphList();
+            undirGraphList.addVertices(graph.getVertexCount());
+            addEdgesFromMatrixToList(graph, undirGraphList);
+            return undirGraphList;
 		}
 	}
 
@@ -54,24 +57,15 @@ public class GraphConverter {
 	 */
 	public static Graph toMatrix(Graph graph) {
 		if (graph.isDirected()) {
-		    DirectedGraphMatrix adjacencyMatrix = new DirectedGraphMatrix();
-		    adjacencyMatrix.addVertices(graph.getVertexCount());
-            for (int vertex = 0; vertex < graph.getVertexCount(); vertex++) {
-                for (int neighbor : graph.getSuccessors(vertex)) {
-                    adjacencyMatrix.addEdge(vertex, neighbor, graph.getEdgeWeight(vertex, neighbor));
-                }
-            }
-			return adjacencyMatrix;
+		    DirectedGraphMatrix dirGraphMatrix = new DirectedGraphMatrix();
+		    dirGraphMatrix.addVertices(graph.getVertexCount());
+            addEdgesFromMatrixToList(graph, dirGraphMatrix);
+			return dirGraphMatrix;
 		} else {
-            UndirectedGraphMatrix adjacencyMatrix = new UndirectedGraphMatrix();
-            adjacencyMatrix.addVertices(graph.getVertexCount());
-            for (int vertex = 0; vertex < graph.getVertexCount(); vertex++) {
-                for (int neighbor : graph.getNeighbors(vertex)) {
-                    adjacencyMatrix.addEdge(vertex, neighbor, graph.getEdgeWeight(vertex, neighbor));
-                }
-            }
-            return adjacencyMatrix;
+            UndirectedGraphMatrix undirGraphMatrix = new UndirectedGraphMatrix();
+            undirGraphMatrix.addVertices(graph.getVertexCount());
+            addEdgesFromMatrixToList(graph, undirGraphMatrix);
+            return undirGraphMatrix;
 		}
 	}
-
 }
