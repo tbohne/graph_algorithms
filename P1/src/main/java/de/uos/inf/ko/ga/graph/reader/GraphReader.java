@@ -9,40 +9,65 @@ import de.uos.inf.ko.ga.graph.Graph;
 import de.uos.inf.ko.ga.graph.impl.DirectedGraphMatrix;
 import de.uos.inf.ko.ga.graph.impl.UndirectedGraphMatrix;
 
+/**
+ * Provides functionalities to read graphs from the file system.
+ *
+ * @author Tim Bohne
+ */
 public class GraphReader {
 
+    /**
+     * Reads the matrix that represents the graph from the file system.
+     *
+     * @param file - the file to read from
+     * @return the generated matrix
+     */
     public static int[][] readMatrix(File file) {
 
         int numberOfVertices = 0;
         int[][] adjacencyMatrix = new int[numberOfVertices][numberOfVertices];
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-
             reader.readLine();
             numberOfVertices = Integer.parseInt(reader.readLine().split(" ")[1].trim());
             adjacencyMatrix = new int[numberOfVertices][numberOfVertices];
+            reader.readLine();
+            String line = reader.readLine();
 
-            String s = reader.readLine();
+            while (line != null) {
+                int idx = Integer.parseInt(line.split(":")[0].trim());
+                String[] row = line.split(":")[1].trim().split(" ");
 
-            while (s.length() > 0) {
-                s = reader.readLine();
-                if (s == null) { break; }
-                int idx = Integer.parseInt(s.split(":")[0].trim());
-                String[] arr = s.split(":")[1].trim().split(" ");
-
-                for (int i = 0; i < arr.length; i++) {
-                    if (!arr[i].trim().equals("x")) {
-                        adjacencyMatrix[idx][i] = Integer.parseInt(arr[i].trim());
+                for (int i = 0; i < row.length; i++) {
+                    if (!row[i].trim().equals("x")) {
+                        adjacencyMatrix[idx][i] = Integer.parseInt(row[i].trim());
                     } else {
                         adjacencyMatrix[idx][i] = Integer.MIN_VALUE;
                     }
                 }
+                line = reader.readLine();
             }
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return adjacencyMatrix;
+    }
+
+    /**
+     * Adds the edges specified by the adjacency matrix to the given graph.
+     *
+     * @param adjacencyMatrix - the matrix containing the graph's edges
+     * @param graph           - the graph the edges are added to
+     */
+    public static void addEdgesForGraph(int[][] adjacencyMatrix, Graph graph) {
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
+                if (adjacencyMatrix[i][j] != Integer.MIN_VALUE) {
+                    graph.addEdge(i, j, adjacencyMatrix[i][j]);
+                }
+            }
+        }
     }
 
 	/**
@@ -54,13 +79,7 @@ public class GraphReader {
         DirectedGraphMatrix graph = new DirectedGraphMatrix();
         int[][] adjacencyMatrix = readMatrix(f);
         graph.addVertices(adjacencyMatrix.length);
-        for (int i = 0; i < adjacencyMatrix.length; i++) {
-            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
-                if (adjacencyMatrix[i][j] != Integer.MIN_VALUE) {
-                    graph.addEdge(i, j, adjacencyMatrix[i][j]);
-                }
-            }
-        }
+        addEdgesForGraph(adjacencyMatrix, graph);
 		return graph;
 	}
 
@@ -73,13 +92,7 @@ public class GraphReader {
         UndirectedGraphMatrix graph = new UndirectedGraphMatrix();
         int[][] adjacencyMatrix = readMatrix(f);
         graph.addVertices(adjacencyMatrix.length);
-        for (int i = 0; i < adjacencyMatrix.length; i++) {
-            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
-                if (adjacencyMatrix[i][j] != Integer.MIN_VALUE) {
-                    graph.addEdge(i, j, adjacencyMatrix[i][j]);
-                }
-            }
-        }
+        addEdgesForGraph(adjacencyMatrix, graph);
         return graph;
 	}
 }
