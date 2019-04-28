@@ -24,7 +24,6 @@ public class SlidingPuzzle {
             }
         }
         this.neighbors = new ArrayList<>();
-//        this.generateNeighbors();
     }
 
     public void generateNeighbors() {
@@ -72,12 +71,6 @@ public class SlidingPuzzle {
             nbr.board[yCoordEmpty][xCoordEmpty + 1] = 0;
             this.neighbors.add(nbr);
         }
-
-        for (SlidingPuzzle p : this.neighbors) {
-            System.out.println("#############");
-            System.out.println(p);
-            System.out.println("#############");
-        }
     }
 
     public int getRandomNumber(ArrayList<Integer> poolOfNumbers) {
@@ -107,10 +100,11 @@ public class SlidingPuzzle {
 
     public SlidingPuzzle getNeighbor() {
 
-//        if (this.neighbors)
+        if (this.neighbors.size() == 0) { return null; }
 
-        return new SlidingPuzzle();
-
+        SlidingPuzzle nbr = this.neighbors.get(0);
+        this.neighbors.remove(0);
+        return nbr;
     }
 
     public boolean problemSolved() {
@@ -122,6 +116,24 @@ public class SlidingPuzzle {
             }
         }
         return true;
+    }
+
+    public boolean equals(Object other) {
+        if (other == null) { return false; }
+
+        if (other instanceof SlidingPuzzle) {
+
+            for (int i = 0; i < DIMENSION; i++) {
+                for (int j = 0; j < DIMENSION; j++) {
+                    if (((SlidingPuzzle) other).board[i][j] != this.board[i][j]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String toString() {
@@ -138,5 +150,4 @@ public class SlidingPuzzle {
         }
         return board;
     }
-
 }
