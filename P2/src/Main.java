@@ -1,12 +1,25 @@
 import java.util.Stack;
 
+/**
+ * Performs a DLS on several randomly generated instances of a sliding puzzle.
+ *
+ * @author Tim Bohne
+ */
 public class Main {
 
+    // specifies the number of different random board configurations to be generated
     static final int NUMBER_OF_CONFIGURATIONS = 10;
+    // specifies the limit for the DLS
     static final int DEPTH = 30;
 
+    /**
+     * Iterative deepening depth first search implementation.
+     *
+     * @param puzzle - instance of the sliding puzzle to be solved
+     * @return whether or not the sliding puzzle instance has been solved successfully
+     */
     public static boolean iterativeDeepeningDepthFirstSearch(SlidingPuzzle puzzle) {
-        for (int i = 5; i < 30; i++) {
+        for (int i = 5; i < DEPTH; i++) {
             puzzle = new SlidingPuzzle(puzzle);
             puzzle.generateNeighbors();
             System.out.println("DEPTH: " + i);
@@ -18,6 +31,13 @@ public class Main {
         return false;
     }
 
+    /**
+     * Depth limited search implementation.
+     *
+     * @param puzzle - instance of the sliding puzzle to be solved
+     * @param depth  - the depth limit for the DLS
+     * @return whether or not the sliding puzzle instance has been solved successfully
+     */
     public static boolean depthLimitedSearch(SlidingPuzzle puzzle, int depth) {
 
         if (puzzle.problemSolved()) { return true; }

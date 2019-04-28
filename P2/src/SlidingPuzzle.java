@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * Represents an instance of the sliding puzzle.
+ *
+ * @author Tim Bohne
+ */
 public class SlidingPuzzle {
 
     private final int DIMENSION = 3;
@@ -9,13 +14,20 @@ public class SlidingPuzzle {
     private int[][] board;
     private ArrayList<SlidingPuzzle> neighbors;
 
-
+    /**
+     * Constructor
+     */
     public SlidingPuzzle() {
         this.generateInitialBoard();
         this.neighbors = new ArrayList<>();
         this.generateNeighbors();
     }
 
+    /**
+     * Copy-Constructor
+     *
+     * @param puzzle - the sliding puzzle instance for which the board gets copied
+     */
     public SlidingPuzzle(SlidingPuzzle puzzle) {
         this.board = new int[DIMENSION][DIMENSION];
         for (int i = 0; i < DIMENSION; i++) {
@@ -26,10 +38,9 @@ public class SlidingPuzzle {
         this.neighbors = new ArrayList<>();
     }
 
-    public int[][] getBoard() {
-        return this.board;
-    }
-
+    /**
+     * Generates the neighbors for the current sliding puzzle board.
+     */
     public void generateNeighbors() {
 
         int xCoordEmpty = -1;
@@ -77,6 +88,13 @@ public class SlidingPuzzle {
         }
     }
 
+    /**
+     * Returns a random number from the specified pool of numbers
+     * and removes it from the pool.
+     *
+     * @param poolOfNumbers - specified pool of numbers
+     * @return a random number from the specified pool of numbers
+     */
     public int getRandomNumber(ArrayList<Integer> poolOfNumbers) {
         Collections.shuffle(poolOfNumbers);
         int number = poolOfNumbers.get(0);
@@ -84,6 +102,9 @@ public class SlidingPuzzle {
         return number;
     }
 
+    /**
+     * Generates a random initial board configuration for the sliding puzzle.
+     */
     public void generateInitialBoard() {
         this.board = new int[DIMENSION][DIMENSION];
         ArrayList<Integer> numbersToBeAssigned = new ArrayList<>();
@@ -102,6 +123,20 @@ public class SlidingPuzzle {
         }
     }
 
+    /**
+     * Returns the current board.
+     *
+     * @return the board represented as two dimensional array
+     */
+    public int[][] getBoard() {
+        return this.board;
+    }
+
+    /**
+     * Returns the next neighbor and removes it from the list of remaining neighbors.
+     *
+     * @return the next neighbor
+     */
     public SlidingPuzzle getNeighbor() {
 
         if (this.neighbors.size() == 0) { return null; }
@@ -111,6 +146,11 @@ public class SlidingPuzzle {
         return nbr;
     }
 
+    /**
+     * Returns whether or not the current board configuration is the target configuration.
+     *
+     * @return true --> problem solved / false --> problem not yet solved
+     */
     public boolean problemSolved() {
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++) {
@@ -124,24 +164,33 @@ public class SlidingPuzzle {
         return true;
     }
 
+    /**
+     * Returns whether another instance of a sliding puzzle
+     * equals this one in terms of the board configuration.
+     *
+     * @param other - the instance of a sliding puzzle this instance is compared to
+     * @return whether or not the instances have an equal board configuration
+     */
+    @Override
     public boolean equals(Object other) {
-        if (other == null) { return false; }
+        if (other == null || !(other instanceof SlidingPuzzle)) { return false; }
 
-        if (other instanceof SlidingPuzzle) {
-
-            for (int i = 0; i < DIMENSION; i++) {
-                for (int j = 0; j < DIMENSION; j++) {
-                    if (((SlidingPuzzle) other).board[i][j] != this.board[i][j]) {
-                        return false;
-                    }
+        for (int i = 0; i < DIMENSION; i++) {
+            for (int j = 0; j < DIMENSION; j++) {
+                if (((SlidingPuzzle) other).board[i][j] != this.board[i][j]) {
+                    return false;
                 }
             }
-            return true;
-        } else {
-            return false;
         }
+        return true;
     }
 
+    /**
+     * Visualized the instances board configuration.
+     *
+     * @return visualization of the board configuration
+     */
+    @Override
     public String toString() {
         String board = "";
         for (int i = 0; i < this.board.length; i++) {
