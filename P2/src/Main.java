@@ -2,10 +2,20 @@ import java.util.Stack;
 
 public class Main {
 
-    public static void main(String[] args) {
-        SlidingPuzzle puzzle = new SlidingPuzzle();
-        System.out.println(puzzle);
-        System.out.println(depthLimitedSearch(puzzle, 30));
+    static final int NUMBER_OF_CONFIGURATIONS = 10;
+    static final int DEPTH = 30;
+
+    public static boolean iterativeDeepeningDepthFirstSearch(SlidingPuzzle puzzle) {
+        for (int i = 5; i < 30; i++) {
+            puzzle = new SlidingPuzzle(puzzle);
+            puzzle.generateNeighbors();
+            System.out.println("DEPTH: " + i);
+            if (depthLimitedSearch(puzzle, i)) {
+                System.out.println("SUCCESS at limit " + i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean depthLimitedSearch(SlidingPuzzle puzzle, int depth) {
@@ -20,13 +30,6 @@ public class Main {
             SlidingPuzzle current = (SlidingPuzzle) stack.peek();
             SlidingPuzzle neighbor = current.getNeighbor();
 
-            System.out.println("#################################");
-            System.out.println("current state:");
-            System.out.println(current);
-            System.out.println("neighbor:");
-            System.out.println(neighbor);
-            System.out.println("#################################");
-
             if (neighbor == null) {
                 stack.pop();
             } else {
@@ -40,5 +43,17 @@ public class Main {
             }
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        for (int configuration = 0; configuration < NUMBER_OF_CONFIGURATIONS; configuration++) {
+            System.out.println("#############################################");
+            System.out.println("configuration: " + configuration);
+            System.out.println("depth: " + DEPTH);
+            SlidingPuzzle puzzle = new SlidingPuzzle();
+            System.out.println(puzzle);
+            System.out.println("solved: " + depthLimitedSearch(puzzle, DEPTH));
+            System.out.println("#############################################");
+        }
     }
 }
