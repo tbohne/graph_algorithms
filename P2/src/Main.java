@@ -3,13 +3,9 @@ import java.util.Stack;
 public class Main {
 
     public static void main(String[] args) {
-
         SlidingPuzzle puzzle = new SlidingPuzzle();
         System.out.println(puzzle);
-
-
         System.out.println(depthLimitedSearch(puzzle, 30));
-
     }
 
     public static boolean depthLimitedSearch(SlidingPuzzle puzzle, int depth) {
@@ -24,17 +20,16 @@ public class Main {
             SlidingPuzzle current = (SlidingPuzzle) stack.peek();
             SlidingPuzzle neighbor = current.getNeighbor();
 
-            System.out.println("##############");
+            System.out.println("#################################");
+            System.out.println("current state:");
             System.out.println(current);
+            System.out.println("neighbor:");
             System.out.println(neighbor);
-            System.out.println("##############");
+            System.out.println("#################################");
 
             if (neighbor == null) {
-
                 stack.pop();
-
             } else {
-
                 neighbor.generateNeighbors();
 
                 if (neighbor.problemSolved()) { return true; }
@@ -43,10 +38,7 @@ public class Main {
                     stack.push(neighbor);
                 }
             }
-
         }
-
         return false;
     }
-
 }

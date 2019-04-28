@@ -26,6 +26,10 @@ public class SlidingPuzzle {
         this.neighbors = new ArrayList<>();
     }
 
+    public int[][] getBoard() {
+        return this.board;
+    }
+
     public void generateNeighbors() {
 
         int xCoordEmpty = -1;
@@ -111,7 +115,9 @@ public class SlidingPuzzle {
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++) {
                 if (this.board[i][j] != i * DIMENSION + j + 1) {
-                    return false;
+                    if (!(i == DIMENSION - 1 && j == DIMENSION - 1)) {
+                        return false;
+                    }
                 }
             }
         }
