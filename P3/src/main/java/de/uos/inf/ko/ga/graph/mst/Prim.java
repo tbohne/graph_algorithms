@@ -1,9 +1,13 @@
 package de.uos.inf.ko.ga.graph.mst;
 
+import com.sun.org.apache.bcel.internal.generic.DDIV;
 import de.uos.inf.ko.ga.graph.Graph;
 import de.uos.inf.ko.ga.graph.impl.UndirectedGraphList;
+import javafx.scene.layout.Priority;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 
 public class Prim {
 
@@ -83,7 +87,61 @@ public class Prim {
 
 		final Graph mst = new UndirectedGraphList();
 
-		/* TODO: implement Prim's algorithm */
+        ArrayList<Integer> alreadyPartOfSpanningTree = new ArrayList<>();
+        PriorityQueue<Edge> heap = new PriorityQueue<>();
+        ArrayList<Integer> predecessors = new ArrayList<>();
+
+        alreadyPartOfSpanningTree.add(0);
+        predecessors.add(-1);
+        for (int vertex : graph.getNeighbors(0)) {
+            heap.add(new Edge(0, vertex, graph.getEdgeWeight(0, vertex)));
+        }
+
+        while (alreadyPartOfSpanningTree.size() != graph.getVertexCount()) {
+
+            Edge minCostEdge = heap.poll();
+            alreadyPartOfSpanningTree.add(minCostEdge.getVertexTwo());
+            predecessors.add(minCostEdge.getVertexOne());
+
+            for (int vertex : graph.getNeighbors(minCostEdge.getVertexTwo())) {
+
+                if (!alreadyPartOfSpanningTree.contains(vertex)) {
+
+                    boolean hasEdge = false;
+                    ArrayList<Edge> toBeRemoved = new ArrayList<>();
+                    ArrayList<Edge> toBeAdded = new ArrayList<>();
+
+                    for (Edge e : heap) {
+                        if (e.getVertexTwo() == vertex) {
+                            if (e.getWeight() > graph.getEdgeWeight(minCostEdge.getVertexTwo(), vertex)) {
+                                toBeRemoved.add(e);
+                                toBeAdded.add(new Edge(minCostEdge.getVertexTwo(), vertex, graph.getEdgeWeight(minCostEdge.getVertexTwo(), vertex)));
+                            }
+                            hasEdge = true;
+                        }
+                    }
+
+                    for (Edge e : toBeRemoved) {
+                        heap.remove(e);
+                    }
+                    for (Edge e : toBeAdded) {
+                        heap.add(e);
+                    }
+
+                    if (!hasEdge) {
+                        heap.add(new Edge(minCostEdge.getVertexTwo(), vertex, graph.getEdgeWeight(minCostEdge.getVertexTwo(), vertex)));
+                    }
+                }
+            }
+        }
+
+        mst.addVertices(graph.getVertexCount());
+
+        for (int i = 1; i < graph.getVertexCount(); i++) {
+            System.out.println("edge (" + predecessors.get(i) + ", " + alreadyPartOfSpanningTree.get(i)
+            + " -- weight: " + graph.getEdgeWeight(predecessors.get(i), alreadyPartOfSpanningTree.get(i)));
+            mst.addEdge(predecessors.get(i), alreadyPartOfSpanningTree.get(i), graph.getEdgeWeight(predecessors.get(i), alreadyPartOfSpanningTree.get(i)));
+        }
 
 		return mst;
 	}
