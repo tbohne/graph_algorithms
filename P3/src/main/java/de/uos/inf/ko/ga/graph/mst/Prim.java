@@ -3,8 +3,7 @@ package de.uos.inf.ko.ga.graph.mst;
 import de.uos.inf.ko.ga.graph.Graph;
 import de.uos.inf.ko.ga.graph.impl.UndirectedGraphList;
 
-import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Prim {
 
@@ -70,83 +69,70 @@ public class Prim {
             // input graph not connected --> return empty graph
             if (predecessors.get(i) == -1) { return new UndirectedGraphList(); }
 
-            System.out.println("edge: (" + predecessors.get(i) + ", " +  i + ")" + " - weight: " +  graph.getEdgeWeight(i, predecessors.get(i)));
+//            System.out.println("edge: (" + predecessors.get(i) + ", " +  i + ")" + " - weight: " +  graph.getEdgeWeight(i, predecessors.get(i)));
             mst.addEdge(predecessors.get(i), i, graph.getEdgeWeight(i, predecessors.get(i)));
         }
 
         return mst;
 	}
 
-	/**
-	 * Computes a minimum spanning tree of an undirected graph using Prim's algorithm.
-	 * @param graph Input graph
-	 * @return Minimum spanning tree of the input graph
-	 */
-	public static Graph minimumSpanningTreeHeap(Graph graph) {
-		assert(graph != null);
-		assert(!graph.isDirected());
+    /**
+     * Computes a minimum spanning tree of an undirected graph using Prim's algorithm.
+     * @param graph Input graph
+     * @return Minimum spanning tree of the input graph
+     */
+    public static Graph minimumSpanningTreeHeap(Graph graph) {
+        assert(graph != null);
+        assert(!graph.isDirected());
 
-		final Graph mst = new UndirectedGraphList();
+        List<Edge> edges = new ArrayList<>();
+        Set<Integer> vertices = new HashSet<>();
+        double[] currentCosts = new double[graph.getVertexCount()];
+        int[] predecessors = new int[graph.getVertexCount()];
 
-        ArrayList<Integer> alreadyPartOfSpanningTree = new ArrayList<>();
         PriorityQueue<Edge> heap = new PriorityQueue<>();
-        ArrayList<Integer> predecessors = new ArrayList<>();
 
-        alreadyPartOfSpanningTree.add(0);
-        predecessors.add(-1);
-        for (int vertex : graph.getNeighbors(0)) {
-            heap.add(new Edge(0, vertex, graph.getEdgeWeight(0, vertex)));
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            currentCosts[i] = Double.POSITIVE_INFINITY;
+        }
+        vertices.add(0);
+
+        // add all neighbors of 0 to the heap
+        List<Integer> neighbors = graph.getNeighbors(0);
+        for (int nbr : neighbors) {
+            predecessors[nbr] = 0;
+            currentCosts[nbr] = graph.getEdgeWeight(0, nbr);
+            heap.add(new Edge(0, nbr, currentCosts[nbr]));
         }
 
-        while (alreadyPartOfSpanningTree.size() != graph.getVertexCount()) {
+        while (vertices.size() < graph.getVertexCount()) {
 
-            // input graph not connected --> return empty graph
             if (heap.size() == 0) { return new UndirectedGraphList(); }
 
             Edge minCostEdge = heap.poll();
-            alreadyPartOfSpanningTree.add(minCostEdge.getVertexTwo());
-            predecessors.add(minCostEdge.getVertexOne());
+            int newVertex = minCostEdge.getVertexTwo();
+            if (vertices.contains(newVertex)) { continue; }
+            vertices.add(newVertex);
+            edges.add(new Edge(predecessors[newVertex], newVertex, graph.getEdgeWeight(predecessors[newVertex], newVertex)));
 
-            for (int vertex : graph.getNeighbors(minCostEdge.getVertexTwo())) {
+            for (int nbr : graph.getNeighbors(newVertex)) {
+                if (!vertices.contains(nbr)) {
+                    if (graph.getEdgeWeight(newVertex, nbr) < currentCosts[nbr]) {
+                        currentCosts[nbr] = graph.getEdgeWeight(newVertex, nbr);
+                        predecessors[nbr] = newVertex;
+                        Edge edge = new Edge(newVertex, nbr, currentCosts[nbr]);
 
-                if (!alreadyPartOfSpanningTree.contains(vertex)) {
-
-                    boolean hasEdge = false;
-                    ArrayList<Edge> toBeRemoved = new ArrayList<>();
-                    ArrayList<Edge> toBeAdded = new ArrayList<>();
-
-                    for (Edge e : heap) {
-                        if (e.getVertexTwo() == vertex) {
-                            if (e.getWeight() > graph.getEdgeWeight(minCostEdge.getVertexTwo(), vertex)) {
-                                toBeRemoved.add(e);
-                                toBeAdded.add(new Edge(minCostEdge.getVertexTwo(), vertex, graph.getEdgeWeight(minCostEdge.getVertexTwo(), vertex)));
-                            }
-                            hasEdge = true;
-                        }
-                    }
-
-                    for (Edge e : toBeRemoved) {
-                        heap.remove(e);
-                    }
-                    for (Edge e : toBeAdded) {
-                        heap.add(e);
-                    }
-
-                    if (!hasEdge) {
-                        heap.add(new Edge(minCostEdge.getVertexTwo(), vertex, graph.getEdgeWeight(minCostEdge.getVertexTwo(), vertex)));
+                        heap.remove(edge);
+                        heap.add(edge);
                     }
                 }
             }
         }
-
+        final Graph mst = new UndirectedGraphList();
         mst.addVertices(graph.getVertexCount());
-
-        for (int i = 1; i < graph.getVertexCount(); i++) {
-            System.out.println("edge (" + predecessors.get(i) + ", " + alreadyPartOfSpanningTree.get(i)
-            + " -- weight: " + graph.getEdgeWeight(predecessors.get(i), alreadyPartOfSpanningTree.get(i)));
-            mst.addEdge(predecessors.get(i), alreadyPartOfSpanningTree.get(i), graph.getEdgeWeight(predecessors.get(i), alreadyPartOfSpanningTree.get(i)));
+        for (Edge e : edges) {
+            mst.addEdge(e.getVertexOne(), e.getVertexTwo(), e.getWeight());
         }
-
-		return mst;
-	}
+        return mst;
+    }
 }
