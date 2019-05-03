@@ -1,12 +1,9 @@
 package de.uos.inf.ko.ga.graph.mst;
 
-import com.sun.org.apache.bcel.internal.generic.DDIV;
 import de.uos.inf.ko.ga.graph.Graph;
 import de.uos.inf.ko.ga.graph.impl.UndirectedGraphList;
-import javafx.scene.layout.Priority;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class Prim {
@@ -69,6 +66,10 @@ public class Prim {
 
         mst.addVertices(graph.getVertexCount());
         for (int i = 1; i < graph.getVertexCount(); i++) {
+
+            // input graph not connected --> return empty graph
+            if (predecessors.get(i) == -1) { return new UndirectedGraphList(); }
+
             System.out.println("edge: (" + predecessors.get(i) + ", " +  i + ")" + " - weight: " +  graph.getEdgeWeight(i, predecessors.get(i)));
             mst.addEdge(predecessors.get(i), i, graph.getEdgeWeight(i, predecessors.get(i)));
         }
@@ -98,6 +99,9 @@ public class Prim {
         }
 
         while (alreadyPartOfSpanningTree.size() != graph.getVertexCount()) {
+
+            // input graph not connected --> return empty graph
+            if (heap.size() == 0) { return new UndirectedGraphList(); }
 
             Edge minCostEdge = heap.poll();
             alreadyPartOfSpanningTree.add(minCostEdge.getVertexTwo());
