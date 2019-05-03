@@ -7,7 +7,13 @@ import java.util.*;
 
 public class Prim {
 
-
+    /**
+     * Returns the cheapest vertex to be added to the MST next (used in the list implementation).
+     *
+     * @param currentCosts - array containing the current costs to reach each vertex
+     * @param vertices     - the list of vertices that are already part of the MST
+     * @return vertex to be added to the MST next
+     */
     public static int getCheapestNextVertex(double[] currentCosts, List<Integer> vertices) {
 
         double min = Integer.MAX_VALUE;
@@ -22,6 +28,15 @@ public class Prim {
         return cheapestVertex;
     }
 
+    /**
+     * Updates the current costs to reach each vertex (used in the list implementation).
+     *
+     * @param graph           - the original graph
+     * @param vertexToBeAdded - the vertex to be added
+     * @param vertices        - the list of vertices that are already part of the MST
+     * @param currentCosts    - array containing the current costs to reach each vertex
+     * @param predecessors    - array containing the predecessor of each vertex
+     */
     public static void updateCurrentCosts(
         Graph graph, int vertexToBeAdded, List<Integer> vertices, double[] currentCosts, int[] predecessors
     ) {

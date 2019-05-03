@@ -109,10 +109,10 @@ public class PrimTest {
 				final long timeEndList = System.currentTimeMillis();
 				final Graph mstHeap = Prim.minimumSpanningTreeHeap(graph);
 				final long timeEndHeap = System.currentTimeMillis();
-				
+
 				timePrimList += (timeEndList - timeStartList);
 				timePrimHeap += (timeEndHeap - timeEndList);
-				
+
 				/* test whether the weights of the trees are equal (this does not actually mean that both graphs are spanning trees) */
 				assertEquals(getGraphWeight(mstList), getGraphWeight(mstHeap), 0.001);
 			}
