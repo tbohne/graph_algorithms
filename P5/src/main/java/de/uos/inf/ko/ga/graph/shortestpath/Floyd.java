@@ -23,16 +23,20 @@ public class Floyd {
         // init distance matrix
         for (int i = 0; i < graph.getVertexCount(); i++) {
             for (int j = 0; j < graph.getVertexCount(); j++) {
-                d[i][j] = graph.getEdgeWeight(i, j);
+                if (i == j) {
+                    d[i][j] = 0;
+                } else {
+                    d[i][j] = graph.getEdgeWeight(i, j);
+                }
             }
         }
 
         // compute shortest paths
-        for (int i = 0; i < graph.getVertexCount(); i++) {
-            for (int j = 0; j < graph.getVertexCount(); j++) {
-                for (int k = 0; k < graph.getVertexCount(); k++) {
-                    if (d[j][i] + d[i][k] < d[j][k]) {
-                        d[j][k] = d[j][i] + d[i][k];
+        for (int k = 0; k < graph.getVertexCount(); k++) {
+            for (int i = 0; i < graph.getVertexCount(); i++) {
+                for (int j = 0; j < graph.getVertexCount(); j++) {
+                    if (d[i][k] + d[k][j] < d[i][j]) {
+                        d[i][j] = d[i][k] + d[k][j];
                     }
                 }
             }
