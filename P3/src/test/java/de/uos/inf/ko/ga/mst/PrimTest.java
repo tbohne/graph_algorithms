@@ -53,7 +53,7 @@ public class PrimTest {
 				assertNotNull(graph);
 
 				final Graph mst = Prim.minimumSpanningTreeList(graph);
-				assertNotNull(mst);
+                assertNotNull(mst);
 
 				RenderGraph.renderGraph(graph, filenamePng);
 				RenderGraph.renderGraph(mst, filenamePng.replace(".png", ".mst.list.png"));
@@ -77,7 +77,7 @@ public class PrimTest {
 				assertNotNull(graph);
 
 				final Graph mst = Prim.minimumSpanningTreeHeap(graph);
-				assertNotNull(mst);
+                assertNotNull(mst);
 
 				RenderGraph.renderGraph(graph, filenamePng);
 				RenderGraph.renderGraph(mst, filenamePng.replace(".png", ".mst.heap.png"));
