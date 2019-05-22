@@ -17,6 +17,26 @@ public class Floyd {
 	 * @return Matrix of dimension n times n with entry d[i][j] being the distance from vertex i to vertex j
 	 */
 	public static double[][] shortestPaths(Graph graph) {
-		throw new UnsupportedOperationException("method not implemented");
+
+        double[][] d = new double[graph.getVertexCount()][graph.getVertexCount()];
+
+        // init distance matrix
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            for (int j = 0; j < graph.getVertexCount(); j++) {
+                d[i][j] = graph.getEdgeWeight(i, j);
+            }
+        }
+
+        // compute shortest paths
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+            for (int j = 0; j < graph.getVertexCount(); j++) {
+                for (int k = 0; k < graph.getVertexCount(); k++) {
+                    if (d[j][i] + d[i][k] < d[j][k]) {
+                        d[j][k] = d[j][i] + d[i][k];
+                    }
+                }
+            }
+        }
+        return d;
 	}
 }
