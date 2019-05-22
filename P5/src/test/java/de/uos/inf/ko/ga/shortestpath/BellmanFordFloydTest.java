@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import de.uos.inf.ko.ga.graph.shortestpath.Floyd;
 import org.junit.Test;
 
 import de.uos.inf.ko.ga.graph.Graph;
@@ -22,6 +23,19 @@ public class BellmanFordFloydTest {
 			"floyd_03.gra"
 	);
 
+	private static void printDistanceMatrix(double[][] distances) {
+        for (int i = 0; i < distances.length; i++) {
+            for (int j = 0; j < distances[i].length; j++) {
+                if (distances[i][j] == Double.POSITIVE_INFINITY) {
+                    System.out.print(" \u221e  ");
+                } else {
+                    System.out.print(distances[i][j] + " ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
 	/**
 	 * Determine distances between all pairs of vertices with Bellman-Ford and Floyd
 	 * and output the distances between all pairs.
@@ -34,10 +48,19 @@ public class BellmanFordFloydTest {
 			try {
 				final Graph graph = GraphReader.readDirectedGraph(fileGraph);
 				assertNotNull(graph);
-				
-				// TODO: compute distances between all pairs with Bellman-Ford and Floyd, and then output the distance matrices
-				
-				// TODO: test whether the values from both distance matrix are equal (use tolerance for comparing floating-point values)
+
+                System.out.println("### " + filename + " ##################################");
+
+                // TODO: compute distances between all pairs with Bellman-Ford and Floyd, and then output the distance matrices
+                double[][] distances = Floyd.shortestPaths(graph);
+                System.out.println("--- FLOYD ---");
+                this.printDistanceMatrix(distances);
+                distances = this.bellmanFordAllPairs(graph);
+                System.out.println("--- BELLMAN-FORD ---");
+                this.printDistanceMatrix(distances);
+                System.out.println("###################################################");
+
+                // TODO: test whether the values from both distance matrix are equal (use tolerance for comparing floating-point values)
 
 			} catch (Exception ex) {
 				fail("caught an exception while computing shortest paths: " + ex);
