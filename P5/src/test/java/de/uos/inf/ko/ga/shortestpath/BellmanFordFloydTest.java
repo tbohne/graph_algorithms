@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import de.uos.inf.ko.ga.graph.impl.UndirectedGraphMatrix;
 import de.uos.inf.ko.ga.graph.shortestpath.Floyd;
+import de.uos.inf.ko.ga.graph.util.GraphGenerator;
 import org.junit.Test;
 
 import de.uos.inf.ko.ga.graph.Graph;
@@ -84,16 +86,22 @@ public class BellmanFordFloydTest {
 	@Test
 	public void testCompareRunningTimes() {
 		final Random random = new Random();
-		final int n = 500;
 
-		long totalTimeBellmanFord = 0; // TODO: track time with System.currentTimeMillis()
-		long totalTimeFloyd = 0;
+		for (int n = 10; n < 500; n += 50) {
 
-		for (int inst = 0; inst < 10; ++inst) {
-			// TODO: generate some random graph and report the running times of both algorithms
+		    Graph graph = new UndirectedGraphMatrix();
+            GraphGenerator.generateRandomGraph(graph, n, random, 0.25);
+
+            System.out.println("--- " + n + " vertices ---");
+
+            double startTime = System.currentTimeMillis();
+            Floyd.shortestPaths(graph);
+            System.out.println("runtime floyd: " + (System.currentTimeMillis() - startTime) / 1000.0);
+
+            startTime = System.currentTimeMillis();
+            this.bellmanFordAllPairs(graph);
+            System.out.println("runtime bellman-ford: " + (System.currentTimeMillis() - startTime) / 1000.0);
 		}
-		
-		// TODO: output some kind of report
 	}
 
 	/**
