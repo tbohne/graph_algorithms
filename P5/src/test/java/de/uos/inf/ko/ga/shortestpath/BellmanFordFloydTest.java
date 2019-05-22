@@ -25,6 +25,11 @@ public class BellmanFordFloydTest {
 			"floyd_03.gra"
 	);
 
+    /**
+     * Prints the specified distance matrix to the console.
+     *
+     * @param distances - the distance matrix to be printed
+     */
 	private void printDistanceMatrix(double[][] distances) {
         for (int i = 0; i < distances.length; i++) {
             for (int j = 0; j < distances[i].length; j++) {
@@ -38,6 +43,13 @@ public class BellmanFordFloydTest {
         }
     }
 
+    /**
+     * Checks whether the two specified matrices contain the same values (with tolerance).
+     *
+     * @param distancesOne - first matrix
+     * @param distancesTwo - second matrix
+     * @return whether the matrices contain the same values
+     */
     private boolean equalDistances(double[][] distancesOne, double[][] distancesTwo) {
         for (int row = 0; row < distancesOne.length; row++) {
             for (int col = 0; col < distancesOne[row].length; col++) {
