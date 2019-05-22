@@ -23,7 +23,7 @@ public class BellmanFordFloydTest {
 			"floyd_03.gra"
 	);
 
-	private static void printDistanceMatrix(double[][] distances) {
+	private void printDistanceMatrix(double[][] distances) {
         for (int i = 0; i < distances.length; i++) {
             for (int j = 0; j < distances[i].length; j++) {
                 if (distances[i][j] == Double.POSITIVE_INFINITY) {
@@ -34,6 +34,17 @@ public class BellmanFordFloydTest {
             }
             System.out.println();
         }
+    }
+
+    private boolean equalDistances(double[][] distancesOne, double[][] distancesTwo) {
+        for (int row = 0; row < distancesOne.length; row++) {
+            for (int col = 0; col < distancesOne[row].length; col++) {
+                if (Math.abs(distancesOne[row][col] - distancesTwo[row][col]) > 0.01) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 	/**
@@ -50,17 +61,16 @@ public class BellmanFordFloydTest {
 				assertNotNull(graph);
 
                 System.out.println("### " + filename + " ##################################");
-
-                // TODO: compute distances between all pairs with Bellman-Ford and Floyd, and then output the distance matrices
-                double[][] distances = Floyd.shortestPaths(graph);
+                double[][] distancesFloyd = Floyd.shortestPaths(graph);
                 System.out.println("--- FLOYD ---");
-                this.printDistanceMatrix(distances);
-                distances = this.bellmanFordAllPairs(graph);
+                this.printDistanceMatrix(distancesFloyd);
+                double[][] distancesBellmanFord = this.bellmanFordAllPairs(graph);
                 System.out.println("--- BELLMAN-FORD ---");
-                this.printDistanceMatrix(distances);
+                this.printDistanceMatrix(distancesBellmanFord);
+                System.out.println();
+                System.out.println("Both algorithms return the same results (distance matrices): "
+                    + this.equalDistances(distancesFloyd, distancesBellmanFord));
                 System.out.println("###################################################");
-
-                // TODO: test whether the values from both distance matrix are equal (use tolerance for comparing floating-point values)
 
 			} catch (Exception ex) {
 				fail("caught an exception while computing shortest paths: " + ex);
