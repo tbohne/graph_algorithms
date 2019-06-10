@@ -4,11 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+import de.uos.inf.ko.ga.graph.impl.DirectedGraphList;
 import de.uos.inf.ko.ga.graph.util.GraphGenerator;
 import org.junit.Test;
 
@@ -41,6 +39,14 @@ public class TwoOptTest {
         return vertices;
     }
 
+    private double getAverageTourLength(List<Double> tourLengths) {
+        double sum = 0.0;
+        for (double length : tourLengths) {
+            sum += length;
+        }
+        return sum / tourLengths.size();
+    }
+
 	@Test
 	public void testRunTwoOptOnTestGraphs() {
 		for (final String filename : GRAPHS) {
@@ -49,28 +55,32 @@ public class TwoOptTest {
             System.out.println("############################ " + filename + " ############################");
 
 			try {
-
-				final Graph graph = GraphReader.readUndirectedGraph(fileGraph);
+				Graph graph = GraphReader.readUndirectedGraph(fileGraph);
 				assertNotNull(graph);
-				
-				// TODO: generate 100 random TSP tours and call TwoOpt.iterativeTwoOpt() on them
 
-                for (int i = 0; i < 1; i++) {
-                    int[] vertices = createVertexArray(graph);
+                int[] vertices = createVertexArray(graph);
+                Tour bestTour = new Tour(graph, vertices);
+                List<Double> tourLengths = new ArrayList();
+
+                for (int i = 0; i < 100; i++) {
                     shuffleArray(vertices);
                     Tour tour = new Tour(graph, vertices);
-                    TwoOpt.iterativeTwoOpt(tour, true);
-//                    System.out.println(t);
+                    tour = TwoOpt.iterativeTwoOpt(tour, true);
+                    tourLengths.add(tour.getCosts());
+                    if (tour.getCosts() < bestTour.getCosts()) {
+                        bestTour = new Tour(tour);
+                    }
                 }
-				
-				// TODO: output minimum, maximum, and average tour length
 
-			} catch (Exception ex) {
-				fail("caught an exception while computing TSP tours: " + ex);
-			}
+                System.out.println("best tour: " + bestTour);
+                System.out.println("min tour length: " + Collections.min(tourLengths));
+                System.out.println("max tour length: " + Collections.max(tourLengths));
+                System.out.println("avg tour length: " + getAverageTourLength(tourLengths));
 
+            } catch (Exception ex) {
+                fail("caught an exception while computing TSP tours: " + ex);
+            }
             System.out.println("####################################################################");
-			break;
         }
 	}
 }
