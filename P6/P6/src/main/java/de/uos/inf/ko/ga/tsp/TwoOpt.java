@@ -1,5 +1,8 @@
 package de.uos.inf.ko.ga.tsp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TwoOpt {
 
 	/**
@@ -47,8 +50,7 @@ public class TwoOpt {
                 newTour[i] = tour.getVertices()[i];
             }
         }
-
-		throw new UnsupportedOperationException("method not implemented");
+        return new Tour(tour.getGraph(), newTour);
 	}
 
 	/**
@@ -63,7 +65,22 @@ public class TwoOpt {
 	 * @return tour obtained by performing the first or the best improvement
 	 */
 	public static Tour twoOptNeighborhood(Tour tour, boolean firstFit) {
-		throw new UnsupportedOperationException("method not implemented");
+
+	    Tour bestTour = new Tour(tour);
+
+	    for (int i = 0; i < tour.getVertices().length - 2; i++) {
+	        for (int j = i + 2; j < tour.getVertices().length; j++) {
+	            Tour tmpTour = twoOptExchange(tour, i, j);
+	            if (firstFit && tmpTour.getCosts() < tour.getCosts()) {
+	                return tmpTour;
+                } else {
+	                if (tmpTour.getCosts() < bestTour.getCosts()) {
+	                    bestTour = new Tour(tmpTour);
+                    }
+                }
+            }
+        }
+        return bestTour;
 	}
 
 	/**
