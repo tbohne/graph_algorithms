@@ -20,6 +20,34 @@ public class TwoOpt {
 		assert(pos2 < tour.getVertices().length);
 		assert(pos1 != (pos2 + 1) % tour.getVertices().length);
 
+		int[] newTour = new int[tour.getVertices().length];
+
+		// special case: last edge used
+        if (pos1 == tour.getVertices().length - 1 || pos2 == tour.getVertices().length - 1) {
+            int idx = 0;
+            newTour[idx++] = tour.getVertices()[0];
+            for (int i = pos1 + 1; i < tour.getVertices().length; i++) {
+                newTour[idx++] = tour.getVertices()[i];
+            }
+            for (int i = pos1; i >= 0; i--) {
+                newTour[idx++] = tour.getVertices()[i];
+            }
+        } else {
+            for (int i = 0; i <= pos1; i++) {
+                newTour[i] = tour.getVertices()[i];
+            }
+            int idx = pos1 + 1;
+            for (int i = pos2; i > pos1; i--) {
+                newTour[idx++] = tour.getVertices()[i];
+            }
+            newTour[idx++] = pos1 + 1;
+            newTour[idx++] = pos2 + 1;
+
+            for (int i = pos2 + 2; i < tour.getVertices().length; i++) {
+                newTour[i] = tour.getVertices()[i];
+            }
+        }
+
 		throw new UnsupportedOperationException("method not implemented");
 	}
 
