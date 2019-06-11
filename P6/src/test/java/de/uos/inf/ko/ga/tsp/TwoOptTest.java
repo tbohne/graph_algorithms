@@ -6,8 +6,6 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.util.*;
 
-import de.uos.inf.ko.ga.graph.impl.DirectedGraphList;
-import de.uos.inf.ko.ga.graph.util.GraphGenerator;
 import org.junit.Test;
 
 import de.uos.inf.ko.ga.graph.Graph;
@@ -21,16 +19,27 @@ public class TwoOptTest {
 			"tsp_03.gra"
 	);
 
-    private static void shuffleArray(int[] ar) {
+    /**
+     * Shuffles the given array.
+     *
+     * @param arr - array to be shuffled
+     */
+    private static void shuffleArray(int[] arr) {
         Random rnd = new Random();
-        for (int i = ar.length - 1; i > 0; i--) {
+        for (int i = arr.length - 1; i > 0; i--) {
             int index = rnd.nextInt(i + 1);
-            int a = ar[index];
-            ar[index] = ar[i];
-            ar[i] = a;
+            int a = arr[index];
+            arr[index] = arr[i];
+            arr[i] = a;
         }
     }
 
+    /**
+     * Creates an array containing the vertices of the specified graph.
+     *
+     * @param graph - graph to create vertex array for
+     * @return created vertex array
+     */
     private int[] createVertexArray(Graph graph) {
         int[] vertices = new int[graph.getVertexCount()];
         for (int i = 0; i < graph.getVertexCount(); i++) {
@@ -39,6 +48,12 @@ public class TwoOptTest {
         return vertices;
     }
 
+    /**
+     * Returns the average tour lengths for the specified list of tour lengths.
+     *
+     * @param tourLengths - list of tour lengths to compute average length for
+     * @return average tour length
+     */
     private double getAverageTourLength(List<Double> tourLengths) {
         double sum = 0.0;
         for (double length : tourLengths) {
@@ -47,6 +62,9 @@ public class TwoOptTest {
         return sum / tourLengths.size();
     }
 
+    /**
+     * Performs the two-opt test for the graphs in the resources directory.
+     */
 	@Test
 	public void testRunTwoOptOnTestGraphs() {
 		for (final String filename : GRAPHS) {
