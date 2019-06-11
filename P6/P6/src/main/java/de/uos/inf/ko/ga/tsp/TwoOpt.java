@@ -24,12 +24,12 @@ public class TwoOpt {
 
 		// special case: last edge used
         if (pos1 == tour.getVertices().length - 1 || pos2 == tour.getVertices().length - 1) {
-            int idx = 0;
+			int idx = 0;
             newTour[idx++] = tour.getVertices()[0];
             for (int i = pos1 + 1; i < tour.getVertices().length; i++) {
                 newTour[idx++] = tour.getVertices()[i];
             }
-            for (int i = pos1; i >= 0; i--) {
+            for (int i = pos1; i > 0; i--) {
                 newTour[idx++] = tour.getVertices()[i];
             }
         } else {
@@ -64,8 +64,8 @@ public class TwoOpt {
 
 	    Tour bestTour = new Tour(tour);
 
-	    for (int i = 0; i < tour.getVertices().length - 2; i++) {
-	        for (int j = i + 2; j < tour.getVertices().length - 1; j++) {
+	    for (int i = 1; i < tour.getVertices().length - 1; i++) {
+	        for (int j = i + 2; j < tour.getVertices().length; j++) {
 	            Tour tmpTour = twoOptExchange(tour, i, j);
 	            if (firstFit && tmpTour.getCosts() < tour.getCosts()) {
 	                return tmpTour;
