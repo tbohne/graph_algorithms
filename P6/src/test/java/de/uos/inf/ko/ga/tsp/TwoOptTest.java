@@ -83,7 +83,7 @@ public class TwoOptTest {
                 for (int i = 0; i < 100; i++) {
                     shuffleArray(vertices);
                     Tour tour = new Tour(graph, vertices);
-                    tour = TwoOpt.iterativeTwoOpt(tour, true);
+                    tour = TwoOpt.iterativeTwoOpt(tour, false);
                     tourLengths.add(tour.getCosts());
                     if (tour.getCosts() < bestTour.getCosts()) {
                         bestTour = new Tour(tour);
