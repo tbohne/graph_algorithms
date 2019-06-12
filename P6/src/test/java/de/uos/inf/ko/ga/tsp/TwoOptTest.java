@@ -13,11 +13,11 @@ import de.uos.inf.ko.ga.graph.reader.GraphReader;
 
 public class TwoOptTest {
 
-	private static final List<String> GRAPHS = Arrays.asList(
-			"tsp_01.gra",
-			"tsp_02.gra",
-			"tsp_03.gra"
-	);
+    private static final List<String> GRAPHS = Arrays.asList(
+            "tsp_01.gra",
+            "tsp_02.gra",
+            "tsp_03.gra"
+    );
 
     /**
      * Shuffles the given array.
@@ -65,16 +65,16 @@ public class TwoOptTest {
     /**
      * Performs the two-opt test for the graphs in the resources directory.
      */
-	@Test
-	public void testRunTwoOptOnTestGraphs() {
-		for (final String filename : GRAPHS) {
-			final File fileGraph = new File("src/test/resources/" + filename);
+    @Test
+    public void testRunTwoOptOnTestGraphs() {
+        for (final String filename : GRAPHS) {
+            final File fileGraph = new File("src/test/resources/" + filename);
 
             System.out.println("############################ " + filename + " ############################");
 
-			try {
-				Graph graph = GraphReader.readUndirectedGraph(fileGraph);
-				assertNotNull(graph);
+            try {
+                Graph graph = GraphReader.readUndirectedGraph(fileGraph);
+                assertNotNull(graph);
 
                 int[] vertices = createVertexArray(graph);
                 Tour bestTour = new Tour(graph, vertices);
@@ -100,5 +100,5 @@ public class TwoOptTest {
             }
             System.out.println("####################################################################");
         }
-	}
+    }
 }
